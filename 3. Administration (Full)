@@ -1,0 +1,1059 @@
+postgre
+It is a general purpose relational database.
+
+\ dp (definition priviledges) -> Regarding users' privileges to a table
+
+\ d languages ​​-> displays the definition of the table.
+
+
+
+When the \ dp query is run ->
+Abbreviation of the powers given on the table
+R w d D x T
+All select update delete Truncate insert Referance Trigger
+
+Insert authorization corresponds to the authority to create foreign keys.
+
+wget downloadozguryazilim.com.tr/PG201/ulkeler.sql
+
+
+
+SURVEILLANCE
+-bash-4.2 $ ps auxf | grep postgres
+
+
+root 3783 0.0 0.2 191924 2456 pts / 0 S 07:32 0:00 | \ _ su - postgres
+postgres 3784 0.0 0.2 115436 2048 pts / 0 S 07:32 0:00 | \ _ -bash
+postgres 6208 0.0 0.1 155496 1956 pts / 0 R + 07:54 0:00 | \ _ ps auxf
+postgres 6209 0.0 0.0 112708 972 pts / 0 S + 07:54 0:00 | \ _ grep --color = auto postgre
+postgres 3485 0.0 1.6 396560 16884? Ss 06:58 0:00 / usr / pgsql-11 / bin / postmaster -D / var / lib / pgsql / 11 / data /
+postgres 3487 0.0 0.1 251480 1928? S 06:58 0:00 \ _ postgres: logger
+postgres 3489 0.0 0.5 396 676 5312? S 06:58 0:00 \ _ postgres: checkpointer
+postgres 3490 0.0 0.3 396560 3344? Ss 06:58 0:00 \ _ postgres: background writer
+postgres 3491 0.0 0.6 396560 6244? S 06:58 0:00 \ _ postgres: walwriter
+postgres 3492 0.0 0.3 397112 3212? S 06:58 0:00 \ _ postgres: autovacuum launcher
+postgres 3493 0.0 0.2 251608 2216? S 06:58 0:00 \ _ postgres: stats collector
+postgres 3494 0.0 0.2 396976 2796? S 06:58 0:00 \ _ postgres: logical replication launcher
+
+postgres 6326 0.0 0.4 397532 4268? Ss 07:57 0:00 \ _ postgres: postgres countries [local] idle
+
+
+Unix is ​​running on the sockette. Default location of Unix socket
+
+-bash-4.2 $ vim /var/lib/pgsql/11/data/postgresql.conf
+#superuser_reserved_connections = 3 # (change requires restart)
+#unix_socket_directories = '/ var / run / postgresql, / tmp' # comma-separated list of directories
+
+
+-bash-$ 4.2 top
+
+
+alt + <c
+
+top - 08:08:14 up 1:24, 4 users, load average: 0.00, 0.01, 0.05
+Tasks: 126 total, 1 running, 125 sleeping, 0 stopped, 0 zombie
+% Cpu (s): 0.0 us, 0.0 sy, 0.0 ni, 100.0 id, 0.0 wa, 0.0 hi, 0.0 si, 0.0 st
+KiB Mem: 1014972 total, 396408 free, 110576 used, 507988 buff / cache
+KiB Swap: 1134588 total, 1134588 free, 0 used. 703276 avail Mem
+
+  PID USER PR NI VIRT RES SHR S% CPU% MEM TIME + COMMAND
+ 2908 root 20 0 573 828 17092 6020 S 0.0 1.7 0: 00.77 / usr / bin / py +
+ 3485 postgres 20 0 396 660 16884 15472 S 0.0 1.7 0: 00.07 / usr / pgsql- +
+ 2566 polkitd 20 0 612 328 12284 4800 S 0.0 1.2 0: 00.05 / usr / lib / po +
+ 2563 root 20 0 553 836 9084 6764 S 0.0 0.9 0: 00.98 / usr / sbin / N +
+    1 root 20 0 128 156
+6680 4176 S 0.0 0.7 0: 01.44 / usr / lib / sy +
+ 3491 postgres 20 0 396 660 6244 4824 S 0.0 0.6 0: 00.07 postgres: w +
+ 2907 root 20 0 214560 6104 3244 S 0.0 0.6 0: 00.37 / usr / sbin / r +
+ 1408 root 20 0 127348 5988 2620 S 0.0 0.6 0: 00.00 / usr / sbin / l +
+ 
+ 
+ Virt - >> The memory area of ​​the subprocess created by the main process
+ Res -> Memory space consumed by the process itself
+ Shr -> The area this process shares
+ PID -> pROCESS Heat
+ 
+ Pr -> Parent Process i ID
+ 
+ 
+ 
+ With its big sign, we can sort the processes according to consumption areas.
+ 
+ Top command
+ Advertising can be done with zxb commands.
+ 
+ -bash-4.2 $ netstat -apl --numeric-hosts | grep postgres
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp 0 0 127.0.0.1:postgres 0.0.0.0:* LISTEN 3485 / postmaster
+tcp6 0 0 :: 1: postgres ::: * LISTEN 3485 / postmaster
+unix 2 [ACC] STREAM LISTENING 26041 3485 / postmaster /var/run/postgresql/.s.PGSQL.5432
+unix 3 [] STREAM CONNECTED 26018 3487 / postgres: logg
+unix 3 [] STREAM CONNECTED 32078 6326 / postgres: post /var/run/postgresql/.s.PGSQL.5432
+
+
+
+
+It provides collection of statistics in Postgre.
+postgres 3493 0.0 0.2 251608 2216? S 06:58 0:00 \ _ postgres: stats collector
+
+
+
+
+#track_activities = on -> Stores the running command itself
+#track_counts = on -> Number of accesses to the table n
+#track_functions = none -> Related to functions
+     # none, pl, all
+#track_activity_query_size = 1024 # (change requires restart) -> show how much of the query
+#stats_temp_directory = 'pg_stat_tmp' -> Which directory to use is in the LTDE of the data directory.
+
+
+It is kept in tables starting with Pg_stat.
+postgres = # select * from pg_stat_
+pg_stat_activity pg_stat_database pg_stat_subscription pg_stat_user_tables pg_stat_xact_user_tables
+pg_stat_all_indexes pg_stat_database_conflicts pg_stat_sys_indexes pg_stat_wal_receiver
+pg_stat_all_tables pg_stat_progress_vacuum pg_stat_sys_tables pg_stat_xact_all_tables
+pg_stat_archiver pg_stat_replication pg_stat_user_functions pg_stat_xact_sys_tables
+pg_stat_bgwriter pg_stat_ssl pg_stat_user_indexes pg_stat_xact_user_functions
+
+
+postgres = # \ x
+Expanded display is on.
+postgres = #
+
+Every link is a process.
+pg_cancel_backent (PID) -> Stops the query of the process
+pg_terminate_backent (PID) -> Processin terminates the connection. it is a dangerous function. It does not allow normal users to operate.
+
+Shows the list of running services.
+[root @ localhost ~] # systemctl --type = service --state = running
+UNIT LOAD ACTIVE SUB DESCRIPTION
+auditd.service loaded active running Security Auditing Service
+chronyd.service loaded active running NTP client / server
+crond.service loaded active running Command Scheduler
+dbus.service loaded active running D-Bus System Message Bus
+getty@tty1.service loaded active running Getty on tty1
+lvm2-lvmetad.service loaded active running LVM2 metadata daemon
+NetworkManager.service loaded active running Network Manager
+polkit.service loaded active running Authorization Manager
+postfix.service loaded active running Postfix Mail Transport Agent
+postgresql-11.service loaded active running PostgreSQL 11 database server
+
+
+
+Close all connections on the database
+
+  
+  
+  TO FOLLOW YOUR DATABASE
+ Zabbix - to watch and take action
+ Nagios
+ 
+ Prometheous and Grafana -> To monitor the number of connections on one side by putting the amount of memory on one side
+ 
+ Percona Monitoring And Management ---> PNM
+Everything is here to monitor a database.
+
+
+Vt LOGS
+
+
+
+-bash-4.2 $ ls -la / var / lib / pgsql / 11 / data / log /
+20 total
+------ drwxr. 2 postgres postgres 58 Aug 21 02:35.
+------ drwxr. 20 postgres postgres 4096 Aug 21 02:35 ..
+-rw -------. 1 postgres postgres 9993 Aug 20 09:39 postgresql-Tue.log
+-rw -------. 1 postgres postgres 186 Aug 21 02:35 postgresql-Wed.log
+
+
+Log settings are kept in postgresql.conf file.
+
+
+BACKUP
+
+We can make backups with sql dump regardless of vt version.
+
+pg_dump single vt backup available
+We can back up pg_dump_all all vt.
+
+
+While taking the backup of vt with pg_dump, first the roles should be backed up and then the backup of vt should be taken.
+
+1. -bash-4.2 $ pg_dumpall -r> /tmp/ulkeler_roles.sql -> Take roles first
+
+2. -bash-4.2 $ pg_dump countries> /tmp/_ulkeler.sql -> then take backup of vt.
+
+
+Splitting the dump file
+
+-bash-4.2 $ pg_dump countries | split -b 10k - /tmp/ulkeler_split.sql
+-bash-4.2 $ ls -la / tmp / | grep countries_s
+-rw-r - r--. 1 postgres postgres 10240 Aug 21 03:36 ulkeler_split.sqlaa
+-rw-r - r--. 1 postgres postgres 10240 Aug 21 03:36 ulkeler_split.sqlab
+-rw-r - r--. 1 postgres postgres 10240 Aug 21 03:36 ulkeler_split.sqlac
+-rw-r - r--. 1 postgres postgres 4770 Aug 21 03:36 ulkeler_split.sqlad
+
+
+
+-> -Fc backup with custom dump. Default p dir (plain dir)
+-bash-4.2 $ pg_dump -Fc countries> / tmp / countries_custom
+
+-Fd can also be dumped as a directory.
+-bash-4.2 $ pg_dump -Fd countries -f / tmp / countries
+-bash-4.2 $ ls -la / tmp / countries
+total 32
+------ drwxr. 2 postgres postgres 97 Aug 21 04:01.
+drwxrwxrwt. 15 root root 4096 Aug 21 04:01 ..
+-rw-r - r--. 1 postgres postgres 4504 Aug 21 04:01 3693.dat.gz
+-rw-r - r--. 1 postgres postgres 3201 Aug 21 04:01 3694.dat.gz
+-rw-r - r--. 1 postgres postgres 2698 Aug 21 04:01 3695.dat.gz
+-rw-r - r--. 1 postgres postgres 4517 Aug 21 04:01 3696.dat.gz
+-rw-r - r--. 1 postgres postgres 3738 Aug 21 04:01 toc.dat
+-bash-4.2 $ psql
+
+
+In the figure below, we can also back up the entire data directory at the operating system level.
+-bash-4.2 $ tar cvfz /tmp/postgre_full.tar.gz / var / lib / pgsql / 11 / data /
+
+However, in order for vt to be consistent, we need to keep the WAL logs as well, and when we restore it, we can apply these WAL logs on vt and finalize them.
+
+
+To start in recovery mode, you need to create a file called recovery.conf.
+
+It backs up both data backup and wal log archives directly with a software called Barman. It gives ease of backup and restoration.
+Barman can be backed up from both master and slave servers.
+
+In London -> Does roughly the same as Barman.
+
+To run Postgre with a different service, it is necessary to create a new service.
+[root @ localhost ~] # systemctl status postgresql-11.service
+● postgresql-11.service - PostgreSQL 11 database server
+   Loaded: loaded (/usr/lib/systemd/system/postgresql-11.service; enabled; vendor preset: disabled)
+   Active: active (running) since Wed 2019-08-21 04:16:30 EDT; 49min ago
+     Docs: https://www.postgresql.org/docs/11/static/
+  Process: 3540 ExecReload = / bin / kill -HUP $ MAINPID (code= exited, status = 0 / SUCCESS)
+  Process: 4769 ExecStartPre = / usr / pgsql-11 / bin / postgresql-11-check-db-dir $ {PGDATA} (code = exited, status = 0 / SUCCESS)
+ Main PID: 4774 (postmaster)
+   CGroup: /system.slice/postgresql-11.service
+           744774 / usr / pgsql-11 / bin / postmaster -D / var / lib / pgsql / 11 / data /
+           764776 postgres: logger
+           ├─4778 postgres: checkpointer
+           ├─4779 postgres: background writer
+           804780 postgres: walwriter
+           ├─4781 postgres: autovacuum launcher
+           ├─4782 postgres: archiver
+           ├─4783 postgres: stats collector
+           ├─4784 postgres: logical replication launcher
+           145145 postgres: postgres postgres [local] idle
+
+Aug 21 04:16:30 localhost.localdomain postmaster [4774]: 2019-08-21 04: 16: 30.6 ...
+Aug 21 04:16:30 localhost.localdomain postmaster [4774]: 2019-08-21 04: 16: 30.6 ...
+Aug 21 04:16:30 localhost.localdomain postmaster [4774]: 2019-08-21 04: 16: 30.6 ...
+Aug 21 04:16:30 localhost.localdomain postmaster [4774]: 2019-08-21 04: 16: 30.6 ...
+Aug 21 04:16:30 localhost.localdomain postmaster [4774]: 2019-08-21 04: 16: 30.6 ...
+Aug 21 04:16:30 localhost.localdomain postmaster [4774]: 2019-08-21 04: 16: 30.6 ...
+Aug 21 04:16:30 localhost.localdomain postmaster [4774]: 2019-08-21 04: 16: 30.6 ...
+Aug 21 04:16:30 localhost.localdomain postmaster [4774]: 2019-08-21 04: 16: 30.6 ...
+Aug 21 04:16:30 localhost.localdomain postmaster [4774]: 2019-08-21 04: 16: 30.6 ...
+Aug 21 04:16:30 localhost.localdomain systemd [1]: Started PostgreSQL 11 datab ...
+Hint: Some lines were ellipsized, use -l to show in full.
+
+
+POstgre Performance
+
+1. The disk must be fast first
+Should be SAS or SSD
+As Disk Type
+NVM -> Non Volatile Memory
+
+Hardware RAID or Software RAID?
+If using hardware RAID, a battery-backed memory should be used.
+
+2. RAM
+ECC -> Error Checking Correction
+In case of an error encountered in Ram, reading from disk is required. To prevent this, ECC rams can be used.
+
+3. CPU
+If we use too many postgre functions, the CPU may need it.
+
+
+
+pg_config -> Shows the compilation parameters of the post. These do not change. To change this, postgre c codes must be recompiled.
+
+-bash-4.2 $ / usr / pgsql-11 / bin / pg_config
+BINDIR = / usr / pgsql-11 / bin
+DOCDIR = / usr / pgsql-11 / doc
+HTMLDIR = / usr / pgsql-11 / doc / html
+INCLUDEDIR = / usr / pgsql-11 / include
+PKGINCLUDEDIR = / usr / pgsql-11 / include
+INCLUDEDIR-SERVER = / usr / pgsql-11 / include / server
+LIBDIR = / usr / pgsql-11 / lib
+PKGLIBDIR = / usr / pgsql-11 / lib
+LOCALEDIR = / usr / pgsql-11 / share / locale
+MANDIR = / usr / pgsql-11 / share / man
+SHAREDIR = / usr / pgsql-11 / share
+SYSCONFDIR = / etc / sysconfig / pgsql
+PGXS = /usr/pgsql-11/lib/pgxs/src/makefiles/pgxs.mk
+CONFIGURE = '--enable-rpath' '--prefix = / usr / pgsql-11' '--includedir = / usr / pgsql-11 / include' '--mandir = / usr / pgsql-11 / share / man '' --datadir = / usr / pgsql-11 / share '' --libdir = / usr / pgsql-11 / lib '' --with-icu '' CLANG = / opt / rh / llvm-toolset-7 / root / usr / bin / clang '' LLVM_CONFIG = / usr / lib64 / llvm5.0 / bin / llvm-config '' --with-llvm '' --with-perl '' --with-python '' - with-tcl '' --with-tclconfig = / usr / lib64 '' --with-openssl '' --with-pam '' --with-gssapi '' --with-includes = / usr / include '' --with-libraries = / usr / lib64 '' --enable-nls '' --enable-dtrace '' --with-uuid = e2fs '' --with-libxml '' --with-libxslt '' - -with-ldap '' --with-selinux '' --with-systemd '' --with-system-tzdata = / usr / share / zoneinfo '' --sysconfdir = / etc / sysconfig / pgsql '' - docdir = / usr / pgsql-11 / doc '' --htmldir = / usr / pgsql-11 / doc / html '' CFLAGS = -O2 -g -pipe -Wall -Wp, -D_FORTIFY_SOURCE = 2 -fexceptions -fstack- protector-strong --param = ssp-buffer-size = 4 -grecord-gcc-switches -m64 -mtune = generic '' LDFLAGS = -Wl, - as-needed '' PKG_CONFIG_PATH =: / usr / lib64 / pkgconfig: / usr / sh Re / pkgconfig '
+CC = gcc
+CPPFLAGS = -D_GNU_SOURCE -I / usr / include / libxml2 -I / usr / include
+CFLAGS = -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision = standard -O2 -g -pipe -Wall -Wp, -D_FORTIFY_SOURCE = 2 -fexceptions -fstack-protector-strong --param = ssp-buffer-size = 4 -grecord-gcc-switches -m64 -mtune = generic
+CFLAGS_SL = -fPIC
+LDFLAGS = -Wl, - as-needed -L / usr / lib64 / llvm5.0 / lib -L / usr / lib64 -Wl, - as-needed -Wl, -rpath, '/ usr / pgsql-11 / lib, - enable-new-dtags
+LDFLAGS_EX =
+LDFLAGS_SL =
+LIBS = -lpgcommon -lpgport -lpthread -lselinux -lxslt -lxml2 -lpam -lssl -lcrypto -lgssapi_krb5 -lz -lreadline -lrt -lcrypt -ldl -lm
+VERSION = PostgreSQL 11.5
+
+WILL THE POSTGRE BE PHYSICAL OR VIRTUAL ON THE VIRTUAL MACHINE?
+Machine Sanitation
+Virtualization will bring slowness in databases where too many persormes are desired.
+
+If the dependency on virtualization is not so great, it should not be used.
+
+
+Disk Virtualization
+LVM or Direct Physical Disk
+Recovering LVM disks is difficult to recover by physical partition.
+The overhead brought by LVM has recently been negligible.
+
+
+Hardware Performance Measurement
+fio sysbench -> Measuring memory, disk, cpu, network performanceData.
+
+For example, we can make 100 IOs to 100 files and measure the average write speed of it. When we run a vt server, it is necessary to carry out performance tests and store them in one place. Because if there is a slowness in the future, we can somehow compare.
+
+Use the same tools when doing the tests.
+
+sysbench or fio? sysbench easier to use
+
+hdparm -> measures the IO capacity of the harddips.
+
+uptime, vmstat, top, htop,
+It can be a live performance monitoring tool.
+dstat (we can see disk, IO, ram, network performance with dstat)
+iotop -> Sorts and displays all processes running on operating systems according to IO usage.
+
+
+with the top command ->
+
+iperf, nicstat --Network
+mpstat --Cpu
+iostat - IO
+
+load average number of running processes divided by total number of processes.
+load average is proportional to the number of cpu in our system. For example, if there is 1 CPU and 1 process is playing, load_average is 1.
+
+
+Linux Kernel
+sysctl ---> close to 1000 parameters
+
+sysctl -a -> we can see all parameters
+
+The location of these parameters is here by default. -> / proc / sys / vm / swappiness
+
+
+[root @ localhost system] # cat / proc / sys / vm / swappiness
+30
+We change this parameter as follows, but the old value remains when the machine is turned off and on. But it is applied instantly
+[root @ localhost system] # echo 60> sudo tee / proc / sys / vm / swappiness
+[root @ localhost system] # cat / proc / sys / vm / swappiness
+30
+
+The other yancan is replaced with the command below but reboot is required for the change to take effect.
+ systemctl -w vm.swappiness = 60
+ 
+ 
+ NUMA - >> Non uniform Memory Access
+ 
+ 
+Core1 Core2
+ Memory0 Memory2 Memory3 Memory4 Memory5 Memory6 Memory6 Memory7
+ 
+ The cores have removed the restriction on using memory areas that the cores will use with the NUMA architecture. However, if this is the other core accessing another core's memory space, the cost increases.
+ 
+ 
+ 
+ TLB -> Transparent huge pages
+ Normally it manages linux memory by dividing it into 4KB pieces. However, if large memory areas are used, 4 KB fragments will be overhead. It is necessary to address more memory areas.
+ 
+ 
+ Sys memory space
+ vm.nr_hugepages
+ 
+ [root @ localhost system] # sysctl -a | grep vm.n
+sysctl: reading key "net.ipv6.conf.all.stable_secret"
+sysctl: reading key "net.ipv6.conf.default.stable_secret"
+sysctl: reading key "net.ipv6.conf.enp0s3.stable_secret"
+sysctl: reading key "net.ipv6.conf.enp0s8.stable_secret"
+sysctl: reading key "net.ipv6.conf.lo.stable_secret"
+vm.nr_hugepages = 0
+vm.nr_hugepages_mempolicy = 0
+vm.nr_overcommit_hugepages = 0
+vm.nr_pdflush_threads = 0
+vm.numa_zonelist_order = default
+
+
+ Huge Pages must be opened.
+ 
+[root @ localhost system] # sysctl -a | grep hugepages
+sysctl: reading key "net.ipv6.conf.all.stable_secret"
+sysctl: reading key "net.ipv6.conf.default.stable_secret"
+sysctl: reading key "net.ipv6.conf.enp0s3.stable_secret"
+sysctl: reading key "net.ipv6.conf.enp0s8.stable_secret"
+sysctl: reading key "net.ipv6.conf.lo.stable_secret"
+vm.hugepages_treat_as_movable = 0
+vm.nr_hugepages = 0
+vm.nr_hugepages_mempolicy = 0
+vm.nr_overcommit_hugepages = 0
+
+
+
+[root @ localhost system] # cat / proc / 4774 / status
+Name: postmaster
+Umask: 0077
+State: S (sleeping)
+Tgid: 4774
+Ngid: 0
+Pid: 4774
+PPid: 1
+TracerPid: 0
+Uid: 26 26 26 26
+Go: 26 26 26 26
+FDSize: 1024
+Groups: 26
+VmPeak: 399792 kB - £
+VmSize: 399772 kB ---> If VmPeak is equal with this place, huge page may not be required. Thus, we understand that there is no emory field that cannot be addressed.
+
+
+
+IO Scheduler - Plans how to queue requests for the operating system of the Linux kernel, and for what priority it writes to disk.
+
+CFQ--> Ideal for average use
+Ideal for Deadline -> Vt systems
+(No operation) Noop -> Working with very fast devices
+   
+If we are working on the virtual machine, we can hardly choose the IO scheduler type.
+
+[root @ localhost system] # cat / sys / block / sda / queue / scheduler
+noop [deadline] cfq
+
+
+swaps
+The system should normally never fall into a swap.
+Swap should not be closed completely.
+If swap is turned off, OOM_KILLER kills any process as well as the vt process (because it consumes a lot of memory).
+
+
+There is a lot of RAM but it drops to swap.
+
+The solution drops to swap when the amount of free memory space is 30%.
+
+[root @ localhost system] # sysctl -a | grep swapp
+sysctl: reading key "net.ipv6.conf.all.stable_secret"
+sysctl: reading key "net.ipv6.conf.default.stable_secret"
+sysctl: reading key "net.ipv6.conf.enp0s3.stable_secret"
+sysctl: reading key "net.ipv6.conf.enp0s8.stable_secret"
+sysctl: reading key "net.ipv6.conf.lo.stable_secret"
+vm.swappiness = 30
+
+In database systems, it makes sense to keep it low.
+
+
+
+There are parameters that determine when to burn the dirty page to disk.
+If the Page is 30% dirty according to you, it will try to write to the disc.
+[root @ localhost system] # sysctl -a | vm.dirty
+-bash: vm.dirty: command not found
+[root @ localhost system] # sysctl -a | grep vm.dirty
+vm.dirty_background_bytes = 0
+vm.dirty_background_ratio = 10 -> 10% of total pagetrying to write in the background when it gets dirty. Cuts reading and writing completely
+vm.dirty_bytes = 0
+vm.dirty_expire_centisecs = 3000
+vm.dirty_ratio = 30 ---> If the page is 30% dirty for you, it will try to write to the disc. It completely stops reading and writing.
+vm.dirty_writeback_centisecs = 500
+
+
+When the machine is not used too much, it reduces the working frequency of the CPU. Although this makes sense for desktops, it is not suitable for servers.
+
+It usually comes in powersave mode by default.
+Performance should be selected instead.
+If a virtual machine is used, it is necessary to look at the physical machine.
+
+acpi_cpufreq + intel_pstate
+
+[root @ localhost system] # cat / sys / devices / system / cpu / cpu0 / acpi_cpufreq
+
+
+write barier -> If we make a no barrier on disk, we get a write speed of 3%.
+It provides writing data to disk and journal while doing no barrier journal sync, but if there is any power problem, it creates data risk.
+We can do this by saying no barrier while mounting.
+
+
+
+
+
+
+
+It keeps track of when the file was accessed. We generally prefer to turn off access time logging in database systems.
+Causes serious performance increase.
+
+[root @ localhost data] # stat postgresql.conf
+  File: 'postgresql.conf'
+  Size: 23949 Blocks: 48 IO Block: 4096 regular file
+Device: fd00h / 64768d Inode: 4771 Links: 1
+Access: (0600 / -rw -------) Uid: (26 / postgres) Gid: (26 / postgres)
+Context: unconfined_u: object_r: postgresql_db_t: s0
+Access: 2019-08-21 04: 16: 30.644425405 -0400
+Modify: 2019-08-21 04: 14: 01.028154747 -0400
+Change: 2019-08-21 04: 14: 01.030154778 -0400
+ Birth: -
+
+
+Even if access time is not important for the database, it is important when, for example, the / etc / passwd file is accessed. For this, the database system must be placed in a separate partition.
+
+Btrfs, ZFS
+Self LVM, Snapshot, snapshot, compression, and so on. Ideal for Desktop.
+
+
+
+PostgreSql VACUUM Concept
+
+MVCC -> Multi Version Concurreny Control
+Postgre always keeps multiple copies of a data.
+
+id name
+1 virtue --Insert command
+
+We did an update after 1 minute
+1 ali ---> We updated on the same line.
+
+id name version
+1 virtue x1
+1 ali x2
+
+In this case, a new line is entered with the update and the version number is the most current. The old data puts a link showing the new data.
+
+For example, I ran a select command and it takes 10 seconds. Meanwhile, an update worked. With select, we see the old version of the data. It is the MVCC that provides this.
+
+Well we will have to delete the old version data somehow. This is done with VACUUM. It clears old data on disk and marks it as available to PostgreSql.
+
+The VACUUM process does not mark those fields blank on disk, it only marks Postgre Sql as available. The df -h output does not change.
+
+[root @ localhost data] # ps -auxf | grep postgre
+root 3711 0.0 0.2 191924 2456 pts / 0 S 03:13 0:00 | \ _ su - postgres
+postgres 3712 0.0 0.2 115436 2112 pts / 0 S + 03:13 0:00 | \ _ -bash
+root 13833 0.0 0.0 112708 976 pts / 1 S + 08:14 0:00 | \ _ grep --color = auto postgre
+
+postgres 4781 0.0 0.3 400344 3340? Ss 04:16 0:00 \ _ postgres: autovacuum launcher
+
+
+
+Normal Vacuum --- Scans all unused areas and marks them as available
+
+Vacuum Full -> Locks the table to write, browses all tables, physically deletes, shifts data.
+
+
+Vacuum Analyze -> Runs vacuum first and then updates the table statistics.
+
+VAcuum Configuration
+
+#autovacuum = on # Enable autovacuum subprocess? 'front'
+                                        # requires track_counts to also be on.
+#log_autovacuum_min_duration = -1 # -1 disables, 0 logs all actions and
+                                        # their durations,> 0 logs only
+                                        # actions running at least this number
+                                        # of milliseconds.
+#autovacuum_max_workers = 3 # max number of autovacuum subprocesses
+                                        # (change requires restart)
+#autovacuum_naptime = 1min # time between autovacuum runs
+#autovacuum_vacuum_threshold = 50 # min number of row updates before
+                                        # vacuum
+#autovacuum_analyze_threshold = 50 # min number of row updates before
+                                        # analyze
+#autovacuum_vacuum_scale_factor = 0.2 # fraction of table size before vacuum
+#autovacuum_analyze_scale_factor = 0.1 # fraction of table size before analyze
+#autovacuum_freeze_max_age = 200000000 # maximum XID age before forced vacuum
+                                        # (change requires restart)
+#autovacuum_multixact_freeze_max_age = 400000000 # maximum multixact age
+                                        # before forced vacuum
+
+ 
+
+We can turn off the automatic vacuum. Because vacuum performanceit leads to loss.
+We do this by making the above parameters -1.
+As a option, we can turn off auto vacuum and make a cron vacuum.
+
+
+With the Percona monitoring management tool, if the stat parameter is on, it collects vacuum stats.
+
+Vacuum full command is given for full vacuum.
+
+
+POSTGRESQL
+Reasonable with the default value.
+
+max_connections = Max number of connections to open to vt. Each link comes as a process on the operating system.
+If users are running a 100MB query and I have 2GB of RAM then 20 users are connected.
+Max. As for the connection, it no longer accepts the connection.
+Monitoring systems are also connected like a user.
+Max. the number of connections is not limited.
+
+Shared buffer: Creates a memory area to be used as a cache.
+
+WorkMem = is the field that Vt allocates for the operations to be used in queries. (For sort, etc.) -> PGA is equivalent. In general, it should be increased in direct proportion to the number of connections. If we increase the number of connections without increasing the work mem, the query performance starts to decrease.
+
+-bash-4.2 $ grep work_mem /var/lib/pgsql/11/data/postgresql.conf
+#work_mem = 4MB # min 64kB
+#maintenance_work_mem = 64MB # min 1MB
+
+PostgreSQL is used for vacuum and analyze works for its internal works.
+
+The query planner decides how the queries will work by looking at this value. ????
+effective_cache_size should be set to an estimate of how much memory is available for disk caching by the operating system and within the database itself, after taking into account what's used by the OS itself and other applications. This is a guideline for how much memory you expect to be available in the OS and PostgreSQL buffer caches, not an allocation! This value is used only by the PostgreSQL query planner to figure out whether plans it's considering would be expected to fit in RAM or not. If it's set too low, indexes may not be used for executing queries the way you'd expect. The setting for shared_buffers is not taken into account here - only the effective_cache_size value is, so it should include memory dedicated to the database too.
+#effective_cache_size = 4GB
+
+
+#wal_buffers = -1 # min 32kB, -1 sets based on shared_buffers
+Must not be larger than 16 MB if used
+
+checkpoint_segments: 10 -> How many will I write to disk when I have wal
+checkpoint_completion_target: 0.9 -> If I missed the first checkpoints, I would have to write them again without missing the checkpoint_timeout time.
+
+
+https://www.pgconfig.org
+https://pgtune.leopard.in.ua/#/
+
+
+DETERMINING THE SLOW QUERIES
+Queries holding a duration of 100 ms are logged to a separate file
+log_min_duration_statement = 100 # -1 is disabled, 0 logs all statements
+                                        # and their durations,> 0 logs only
+logging_collector = on # Enable capturing of stderr and csvlog
+                                        # into log files. Required to be on for
+                                        # csvlogs.
+
+
+ pg_stat_user_indexes ---> By users
+pg_index -> Hold all indexes
+
+TABLE STATISTICS
+Analyze is created with the command
+kept in the pg_statistic catalog.
+updated with autovacuum.
+
+INQUIRY PLANNER
+Query planner
+There is no Indian in Postgre.
+
+explain ->
+countries = # explain select * from number;
+- [RECORD 1] --------------------------------------------- ----------------
+QUERY PLAN | Seq Scan on number (cost = 0.00..144247.79 rows = 9999979 width = 4)
+
+
+pgbadg is
+pg_query_analyz is
+
+
+FILLING or Unloading VT
+Removing indexes and re-creating them
+Removing and re-inserting foreign keys ---> Removing Foreign may cause incorrect data entry.
+Turn off archiving Wal
+Using copy instead of insert
+Running a subset after data entry
+
+PGBENCH
+-bash-4.2 $ / usr / pgsql-11 / bin / pgbench
+
+
+Postgresql load test is done with PgBEnch. -> In general, it answers the question of how we can improve the post.
+If you change a parameter, Postgre answers the question of whether it works properly.
+
+It is necessary to spread this test over a certain period of time and look at its average.
+
+It is necessary to repeat the test by changing the parameters.
+Reading performance can be improved with master slave replication
+
+
+HIGH ACCESSIBILITY
+Single Point of Failure
+
+
+If Yüksel does not reach
+scaling
+redundancy
+
+It is important that the NTP setting is the same time between systems.
+
+Data transfer can be done in various ways. Network connection speed between servers should be good.
+The hardware of the servers to be replicated must be identical.
+
+The version number can be given to the data by the application for differences due to stale data. For example, you can open another column and write the data of the data there.
+
+Slaves can be produced as much as we want in Postgre. Slaves can also be produced from slaves.
+Backups can be taken via slave servers.
+We can set the slave server as the master we want. (Promotion)
+Generally readingSlaves are used for ems.
+
+With 3rd party applications, we can direct the writing operations from the proxy or from within the application to the master and read operations to the slaves.
+
+
+The master can be set to not write data successful unless data is written to at least one slave server.
+
+
+
+QUORUM (Majority) --- Auto Failover
+
+Master
+Slave Slave Slave Slave
+
+- There are 5 nodes and my quorum is 3. Always work with a single number of nodes.
+
+
+If there are 4 nodes, if 2 nodes cannot communicate with each other, this is called split brain.
+
+In quorum systems, node called arbiter is used in order not to cause split brains at least. Thus, the majority is provided for the quorum.
+
+
+AUTO Failover
+Proxy server
+| | |
+Master Slave Slave
+
+If the proxy server cannot communicate with the master, it will now be able to master any slave and direct its write operations to it.
+
+The proxy server above causes single point of failure in this case, so it should be lifted to the proxy server to work passively.
+
+
+FLOATING IP
+
+
+A floating rope is given to the master. If the MAster server does not respond, it will float the Floating Ip and continue.
+In case the master falls, the master quorum should be configured to release the rope.
+
+But the exact solution
+stonit - >> shoot the other node in the head
+however, shutdown should not be done here -h. In other words, if it is virtual or if it is virtual, then that node must be created.
+
+
+Or there is a common storage. Masters use it. If the master master goes, this is killed and the other master is raised and the data file in the storage is displayed.
+
+
+
+Streaming Replication
+The SLave server connects to the master. A user master with replication authority is also created.
+
+
+1.Master To Do
+The master server must be connectable by the slave.
+ 
+then in postgresql.conf
+
+wal_level = replication -> must be at least replicamax_ı
+max_wal_send = 3
+wal_keep_segment = 32
+clear your data directory
+
+pg_hba.conf
+host replication replication 192.168.56.0/24 true
+
+
+2. Slave side
+close postgre
+clear your data directory
+get pg_basebackup
+
+With pg_basebackup, the data directory of the master was copied to the slave side.
+
+in postgresql.conf file
+wal_level = replication
+max_wal_send = 3
+wal_keep_segment = 32
+hot_standby = on
+wal_hint = on ---> only one can change this on the slave server. If we do ten, we can open the read olny slave. If it is off, it won't even accept a connection.
+
+
+A file called recovery.conf is created.
+In standby_mo = 'on'
+primary_conninfo = 'host = master ip port = 5432 application_name = standby server user = replication password = password'
+trigger_file = 'var / lib / pgsql / 11 / data / promote_db'
+-> Seeing this, the slave server will exit the slave mode and go to the master mode.
+
+
+
+The SLave server runs in continuous recovery mode.
+
+After these processes, when the slave server is turned on
+The slave switches to standby mode and plays wal_logs. Switches to Consistent state. Thanks to the hot_standby on parameter, read only accepts connections.
+
+
+on master --- >> pg_current_wal_lsn
+on the slave --- >> pg_last_wal_receive_lsn
+
+
+Well to promote the slave as a master
+
+We create the trigger_file on the slave, which we previously mentioned in recovery.conf.
+
+In this case, there were 2 master servers. Because we did not take any action on the first master.
+
+When slave promotes to master, it pulls the name of recovery.conf to recovery.done.
+
+WAL ARCHIVING
+wal_logs will delete wal logs if they are not in vt archive mode.
+
+To prevent this, arcihive_mode = on is set in the postgre.conf file.
+
+archive_mode = on # enables archiving; off, on, or always
+                                # (change requires restart)
+archive_command = 'test! -f / mnt / server / archive /% f && cp% p / mnt / server / archive /% f '
+
+
+We're actually streaming.
+
+
+In this way, wal_logs are copied to another location before checking in.
+Point in time with these wal_logs
+
+Archive operations should work properly. Archive_command should work properly.
+
+With every base_backup we get, we can return to the interim times.
+
+
+Sample
+For example, Slave sends a past pg_basebackup and sends past preferred arch_log files to slave
+then nir
+When restore_command is executed in rocevery conf file, it returns the slave to any time in the past.
+
+In the recovery.conf file
+By returning recovery_target_time = -> we can return until a certain time.
+We can also delete the wal logs it plays with the pg_archivecleaneup command.
+
+in the master
+wal_replication_slot = 3
+In this case, it does not delete wal logs without notifying the master slaves that wal_logs are being sent and played.
+
+Streaming replication
+Feaultu is made asynchronously. In this case, it does not guarantee that the slave is exactly the same as the master.
+
+But
+If we change the postgre.conf file in master as follows. We still bring slaves synchronously.
+synchronous_standby_names = slavename
+
+#synchronous_commit = on -> We can prevent certain transanctions from syncing. For example, if a large amount of data will be entered into a master,
+
+
+recovery_min_apply_delay = 2h -> Provides 2 hours behind a slave.
+
+On the master server
+Shows the status of replication with pg_stat_replication.
+
+wal_sender_timeout wal_logs will not be disconnected for slave.
+wal_receiver_timeout no matter how long wal_logs do not arrive, the connection with the master will be disconnected.
+
+If an automatic failover will be made on the slave server, the master must also be made in the parameters to be made.
+
+
+It can be done on a vt basis with streaming replication.
+
+
+
+BARMAN
+Backup and Continues Archive.
+
+2ndQuadrant -> PostgreSql supports.
+Hot Standby, PITR, full and incremental backup, multi master slave
+
+Passwordless ssh should be available between the barman user and the Postgre servers postgres user on the barman server.
+
+
+; Default compression level: possible values ​​are None (default), bzip2, gzip, pigz, pygzip or pybzip2
+compression = gzip
+
+
+; Time frame that must contain the latest backup date.
+; If the latest backup is older than the time frame, barman check
+; command will report an error to the user.
+; If empty, the latest backup is always considered valid.
+; Syntax for this option is: "i (DAYS | WEEKS | MONTHS)" where i is an
+; integer> 0 which identifies the number of days | weeks | months of
+; validity of the latest backup for this check. Also known as 'smelly backup'.
+last_backup_maximum_age =
+
+
+
+
+; Number of retries of data copy during base backup after an error - default 0
+; basebackup_retry_times = 0
+
+; Number of seconds of wait after a failed copy, before retrying - default 30
+; basebackup_retry_sleep = 30
+
+
+ 
+The following code shows a basic example of traditional backup using rsync / SSH:
+
+[PostgreSQL-server]
+description = "PostgreSQL Database (via Ssh)"
+ssh_command = ssh postgres @ pg
+conninfo = host = pg user = barman dbname = postgres -> How to open streaming link
+retention_policy = recover window of 14 days
+backup_method = rsync
+parallel_jobs = 1
+reuse_backup = link
+archiver = on
+wal_retention_policy = main -> Policy for retention of archive logs (WAL files). Currently only “MAIN” is available. Global / Server.
+
+
+% p -> / var / lib / pgsql / 11 / data / pg_wal /
+% f -> / var / lib / pgsql / 11 / data / pg_wal / 0000000100000000000000A2
+
+
+barman check postgresql-server after them
+
+
+REPMGR
+Streaming Replication tool
+Standby Cloning
+Monitoring and Manual / Automatic Cloning
+
+replication cluster -> PostgreSQL servers on streaming replication link
+node: each server
+
+upstream node: Replicated server. He is mostly a master. It can also be a slave because PostgreSql allows another standby to be replicated by another standby.
+
+Failover: To introduce the master server to the appropriate slave to the master. Manual failover may be needed occasionally because we can do manual failover when doing some updates.
+
+
+switchover ---> After losing the master's mastership feature, that master is then added to the cluster as a slave.
+
+fencing -> What is done to prevent the old master from trying to become a master when he returns.
+
+witness-server: Arbiter node that helps decide which one to promote when failover is available
+
+
+With RepMng
+Standby server setup
+Making a Standby Master
+Standby <- Switch between mastr servers
+Show the status of servers in the cluster
+
+
+
+RepMgr -> It has its own tables.
+
+All servers in the cluster must be able to ssh without password with postgres users.
+
+
+Postgre installed on slave servers, data directory must be empty and not working. RepMgr will raise its own posture.
+
+
+Repmgr database is installed on the master server.
+
+/etc/repmgr/11/repmgr.conf -> You should not keep the file in Postgre's data directory because the data directory can be deleted when it is failover or switchover.
+
+
+
+To be made on other (Slave) servers in the cluster
+
+Standby clone is done.
+Postgre is launched.
+Run by saying standby register
+
+
+Automatic Use of RepMgr
+
+repmgrd -> RepMgr service
+
+LOGICAL REPLICATION
+Transfer of vt table changes instead of the difference of files in the file system
+wal_level = replication
+The information about what the change was in the wal file, with which query the change was made started to come.
+
+Publisher and Subscriber
+The master server broadcasts the vts it wants to replicate with logical replication. Then the slaves (subcribers) go to the slaves that subscribe to them.
+
+
+A slave can subscribe to more than one master.
+
+Instead of the entire database, it can replicate certain parts.
+
+MASTER MASTER
+a1 b1
+a2 b2
+
+
+SUBSCRIBER1 Subscriber2
+a1 a2
+b2, b1
+
+In this case, different databases in different masters can be replicated with separate subscribers. Thus, even masters may not be required to read. It provides isolation in physical sense.
+
+
+
+pgPool
+Connection Pool
+
+pgPool
+
+Postgre Postgre Postgre
+Master Slave Slave
+
+MAster can distinguish slave. It directs the inserts to the master and the reads to all servers.
+
+Link to PgPool rep managerIt can be deflected automatically.
+
+Can make parallel inquiries. For example, i can divide it by 3, for example.
+
+In addition to active PgPool, a passive PgPool can also be installed and operated. If the active goes, the passive replaces the other.
+
+Hides connections to the server. If the same user tries to close the connection and open the connection again, continue from the old connection.
+
+PgBouncer can be used for connection pooling. He's the only job. A lighter solution.
+
+If the application language has poooling feature, there is no need to use PgPool.
+
+It can be used for load balancing. It is able to load queries.
+
+It distributes session-based load, not query-based. For example, it sends the first link to node1 and the other link to node 2.
+
+It can be operated as a cluster. It does this through the WatchDog subprocess.
+If the passive is active, it passively re-joins the former active cluster.
+
+
+
+PL / Proxy
+An intermediate layer for sharding
+We have a large table and we are using a certain part of this table continuously.
+The process of dividing the large table into smaller pieces is called partitioning.
+Shard key
+
+  There are 100000 Big Tables
+  
+Slony
+A replication method used before Streaming Replication.
+It works between different versions.
+With Slony, it can replicate schema and tables instead of all vt.
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+schema and DDL commands are not replicated with logical replication.
+Truncate commands are not replicated.
+Large objects are not replicated.
